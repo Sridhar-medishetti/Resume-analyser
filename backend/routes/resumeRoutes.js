@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const parseResume = require("../utils/parser");
 
 const router = express.Router();
 
@@ -14,11 +15,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/upload", upload.single("resume"), (req, res) => {
-  res.json({
-    message: "Resume uploaded successfully",
-    file: req.file,
-  });
+router.post("/upload", upload.single("resume"), async (req, res) => {
+  try {
+    const text = await parseResume(req.file.path, req.file.mimetype);
+
+    res.json({
+      message: "Resume parsed successfully",
+      text: text.substring(0, 1000),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Resume parsing failed",
+      error: error.message,
+    });
+  }
 });
 
 module.exports = router;
