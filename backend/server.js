@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const resumeRoutes = require("./routes/resumeRoutes");
 
 dotenv.config();
 
@@ -8,6 +9,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/resumes", resumeRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "AI Resume Parser API running" });
