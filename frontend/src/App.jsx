@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "./api";
 import "./App.css";
+import jsPDF from "jspdf";
 
 function App() {
   const [file, setFile] = useState(null);
@@ -82,6 +83,62 @@ function App() {
   );
 });
 
+const downloadReport = () => {
+  if (!resumeData) {
+    alert("Upload resume first");
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text("AI Resume Analysis Report", 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Name: ${resumeData.name || "N/A"}`, 20, 35);
+  doc.text(`Email: ${resumeData.email || "N/A"}`, 20, 45);
+  doc.text(`Phone: ${resumeData.phone || "N/A"}`, 20, 55);
+  doc.text(`Resume Score: ${resumeData.score || 0}`, 20, 65);
+
+  doc.text("Skills:", 20, 80);
+  doc.text(resumeData.skills?.join(", ") || "N/A", 20, 90, {
+    maxWidth: 170,
+  });
+
+  let y = 110;
+
+  if (matchResult) {
+    doc.text(`Match Percentage: ${matchResult.matchPercentage}%`, 20, y);
+    y += 10;
+
+    doc.text(`Verdict: ${matchResult.verdict || "N/A"}`, 20, y);
+    y += 15;
+
+    doc.text("Matched Skills:", 20, y);
+    y += 10;
+    doc.text(matchResult.matchedSkills?.join(", ") || "None", 20, y, {
+      maxWidth: 170,
+    });
+    y += 20;
+
+    doc.text("Missing Skills:", 20, y);
+    y += 10;
+    doc.text(matchResult.missingSkills?.join(", ") || "None", 20, y, {
+      maxWidth: 170,
+    });
+    y += 20;
+
+    doc.text("Recommendations:", 20, y);
+    y += 10;
+
+    matchResult.recommendations?.forEach((item) => {
+      doc.text(`- ${item}`, 20, y, { maxWidth: 170 });
+      y += 10;
+    });
+  }
+
+  doc.save(`${resumeData.name || "resume"}-analysis-report.pdf`);
+};
 
   return (
     <div className="layout">
@@ -148,7 +205,13 @@ function App() {
               <p><strong>Email:</strong> {resumeData.email}</p>
               <p><strong>Phone:</strong> {resumeData.phone}</p>
               <p className="score">Resume Score: {resumeData.score}</p>
+<h3>Resume Suggestions</h3>
 
+<ul>
+  {suggestions.map((item, index) => (
+    <li key={index}>{item}</li>
+  ))}
+</ul>
               <h3>Skills</h3>
               <div className="skills">
                 {resumeData.skills?.map((skill) => (
@@ -184,7 +247,9 @@ function App() {
               />
 
               <button onClick={handleMatch}>Analyze Match</button>
-
+<button onClick={downloadReport}>
+  Download Report
+</button>
               {matchResult && (
                 <div className="match-box">
                   <h2>Match Percentage: {matchResult.matchPercentage}%</h2>
