@@ -1,21 +1,45 @@
 const matchResumeWithJD = (resumeSkills, jdText) => {
-  const jdLower = jdText.toLowerCase();
+  const allSkills = [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React",
+    "Node.js",
+    "Express.js",
+    "MongoDB",
+    "SQL",
+    "MySQL",
+    "Python",
+    "Java",
+    "Git",
+    "GitHub",
+    "REST API",
+    "JWT",
+    "Docker",
+    "AWS",
+  ];
 
-  const matchedSkills = resumeSkills.filter((skill) =>
-    jdLower.includes(skill.toLowerCase())
+  const jdSkills = allSkills.filter((skill) =>
+    jdText.toLowerCase().includes(skill.toLowerCase())
   );
 
-  const missingSkills = resumeSkills.filter(
-    (skill) => !jdLower.includes(skill.toLowerCase())
+  const matchedSkills = jdSkills.filter((skill) =>
+    resumeSkills.includes(skill)
+  );
+
+  const missingSkills = jdSkills.filter(
+    (skill) => !resumeSkills.includes(skill)
   );
 
   const matchPercentage =
-    resumeSkills.length > 0
-      ? Math.round((matchedSkills.length / resumeSkills.length) * 100)
+    jdSkills.length > 0
+      ? Math.round(
+          (matchedSkills.length / jdSkills.length) * 100
+        )
       : 0;
 
   const recommendations = missingSkills.map(
-    (skill) => `Add or improve ${skill} knowledge to increase job match score.`
+    (skill) => `Learn ${skill} to improve your match score`
   );
 
   return {
