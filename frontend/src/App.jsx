@@ -186,7 +186,7 @@ function App() {
               {matchResult && (
                 <div className="match-box">
                   <h2>Match Percentage: {matchResult.matchPercentage}%</h2>
-
+<p className="score">{matchResult.verdict}</p>
                   <h3 className="green">Matched Skills</h3>
                   <div className="skills">
                     {matchResult.matchedSkills?.map((skill) => (

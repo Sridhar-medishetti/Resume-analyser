@@ -42,11 +42,22 @@ const matchResumeWithJD = (resumeSkills, jdText) => {
     (skill) => `Learn ${skill} to improve your match score`
   );
 
+  let verdict = "";
+
+if (matchPercentage >= 80) {
+  verdict = "Strong match for this job role";
+} else if (matchPercentage >= 50) {
+  verdict = "Moderate match, improve missing skills";
+} else {
+  verdict = "Low match, add more required skills";
+}
+
   return {
     matchedSkills,
     missingSkills,
     recommendations,
     matchPercentage,
+    verdict,
   };
 };
 
