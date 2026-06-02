@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "./api";
+import "./App.css";
 
 function App() {
   const [file, setFile] = useState(null);
