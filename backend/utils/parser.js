@@ -70,6 +70,28 @@ const extractSkills = (text) => {
   );
 };
 
+const extractEducation = (text) => {
+  const educationKeywords = [
+    "B.Tech",
+    "Bachelor",
+    "Engineering",
+    "Degree",
+    "University",
+    "College",
+    "Intermediate",
+    "SSC",
+  ];
+
+  return text
+    .split("\n")
+    .filter((line) =>
+      educationKeywords.some((keyword) =>
+        line.toLowerCase().includes(keyword.toLowerCase())
+      )
+    )
+    .map((line) => line.trim());
+};
+
 const parseResume = async (filePath, mimetype) => {
   let text = "";
 
@@ -92,6 +114,7 @@ const parseResume = async (filePath, mimetype) => {
   email: extractEmail(text),
   phone: extractPhone(text),
   skills: extractSkills(text),
+  education: extractEducation(text),
   rawText: text,
 };
 

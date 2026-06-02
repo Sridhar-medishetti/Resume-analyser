@@ -6,6 +6,7 @@ const resumeSchema = new mongoose.Schema(
     email: String,
     phone: String,
     skills: [String],
+    education: [String],
     rawText: String,
     fileName: String,
   },
