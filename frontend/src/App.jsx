@@ -68,77 +68,76 @@ function App() {
     }
   };
 
+  const downloadReport = () => {
+    if (!resumeData) {
+      alert("Upload resume first");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("AI Resume Analysis Report", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Name: ${resumeData.name || "N/A"}`, 20, 35);
+    doc.text(`Email: ${resumeData.email || "N/A"}`, 20, 45);
+    doc.text(`Phone: ${resumeData.phone || "N/A"}`, 20, 55);
+    doc.text(`Resume Score: ${resumeData.score || 0}`, 20, 65);
+
+    doc.text("Skills:", 20, 80);
+    doc.text(resumeData.skills?.join(", ") || "N/A", 20, 90, {
+      maxWidth: 170,
+    });
+
+    let y = 110;
+
+    if (matchResult) {
+      doc.text(`Match Percentage: ${matchResult.matchPercentage}%`, 20, y);
+      y += 10;
+
+      doc.text(`Verdict: ${matchResult.verdict || "N/A"}`, 20, y);
+      y += 15;
+
+      doc.text("Matched Skills:", 20, y);
+      y += 10;
+      doc.text(matchResult.matchedSkills?.join(", ") || "None", 20, y, {
+        maxWidth: 170,
+      });
+      y += 20;
+
+      doc.text("Missing Skills:", 20, y);
+      y += 10;
+      doc.text(matchResult.missingSkills?.join(", ") || "None", 20, y, {
+        maxWidth: 170,
+      });
+      y += 20;
+
+      doc.text("Recommendations:", 20, y);
+      y += 10;
+
+      matchResult.recommendations?.forEach((item) => {
+        doc.text(`- ${item}`, 20, y, { maxWidth: 170 });
+        y += 10;
+      });
+    }
+
+    doc.save(`${resumeData.name || "resume"}-analysis-report.pdf`);
+  };
+
   const totalSkills = resumeData?.skills?.length || 0;
   const latestScore = resumeData?.score || 0;
   const totalResumes = allResumes.length;
+
   const filteredResumes = allResumes.filter((resume) => {
-  const search = searchTerm.toLowerCase();
+    const search = searchTerm.toLowerCase();
 
-  return (
-    resume.name?.toLowerCase().includes(search) ||
-    resume.email?.toLowerCase().includes(search) ||
-    resume.skills?.some((skill) =>
-      skill.toLowerCase().includes(search)
-    )
-  );
-});
-
-const downloadReport = () => {
-  if (!resumeData) {
-    alert("Upload resume first");
-    return;
-  }
-
-  const doc = new jsPDF();
-
-  doc.setFontSize(18);
-  doc.text("AI Resume Analysis Report", 20, 20);
-
-  doc.setFontSize(12);
-  doc.text(`Name: ${resumeData.name || "N/A"}`, 20, 35);
-  doc.text(`Email: ${resumeData.email || "N/A"}`, 20, 45);
-  doc.text(`Phone: ${resumeData.phone || "N/A"}`, 20, 55);
-  doc.text(`Resume Score: ${resumeData.score || 0}`, 20, 65);
-
-  doc.text("Skills:", 20, 80);
-  doc.text(resumeData.skills?.join(", ") || "N/A", 20, 90, {
-    maxWidth: 170,
+    return (
+      resume.name?.toLowerCase().includes(search) ||
+      resume.email?.toLowerCase().includes(search) ||
+      resume.skills?.some((skill) => skill.toLowerCase().includes(search))
+    );
   });
-
-  let y = 110;
-
-  if (matchResult) {
-    doc.text(`Match Percentage: ${matchResult.matchPercentage}%`, 20, y);
-    y += 10;
-
-    doc.text(`Verdict: ${matchResult.verdict || "N/A"}`, 20, y);
-    y += 15;
-
-    doc.text("Matched Skills:", 20, y);
-    y += 10;
-    doc.text(matchResult.matchedSkills?.join(", ") || "None", 20, y, {
-      maxWidth: 170,
-    });
-    y += 20;
-
-    doc.text("Missing Skills:", 20, y);
-    y += 10;
-    doc.text(matchResult.missingSkills?.join(", ") || "None", 20, y, {
-      maxWidth: 170,
-    });
-    y += 20;
-
-    doc.text("Recommendations:", 20, y);
-    y += 10;
-
-    matchResult.recommendations?.forEach((item) => {
-      doc.text(`- ${item}`, 20, y, { maxWidth: 170 });
-      y += 10;
-    });
-  }
-
-  doc.save(`${resumeData.name || "resume"}-analysis-report.pdf`);
-};
 
   return (
     <div className="layout">
@@ -147,18 +146,21 @@ const downloadReport = () => {
         <p>Parser & Job Matcher</p>
 
         <nav>
-  <a href="#dashboard">Dashboard</a>
-  <a href="#upload">Upload Resume</a>
-  <a href="#job-match">Job Match</a>
-  <a href="#resumes">Parsed Resumes</a>
-</nav>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#upload">Upload Resume</a>
+          <a href="#job-match">Job Match</a>
+          <a href="#resumes">Parsed Resumes</a>
+        </nav>
       </aside>
 
       <main className="main">
         <div className="hero">
           <div>
             <h1>AI Resume Parser</h1>
-            <p>Upload resumes, extract candidate details, and match them with job descriptions.</p>
+            <p>
+              Upload resumes, extract candidate details, and match them with job
+              descriptions.
+            </p>
           </div>
         </div>
 
@@ -202,20 +204,30 @@ const downloadReport = () => {
           <section className="grid">
             <div className="card">
               <h2>{resumeData.name}</h2>
-              <p><strong>Email:</strong> {resumeData.email}</p>
-              <p><strong>Phone:</strong> {resumeData.phone}</p>
-              <p className="score">Resume Score: {resumeData.score}</p>
-<h3>Resume Suggestions</h3>
 
-<ul>
-  {suggestions.map((item, index) => (
-    <li key={index}>{item}</li>
-  ))}
-</ul>
+              <p>
+                <strong>Email:</strong> {resumeData.email}
+              </p>
+
+              <p>
+                <strong>Phone:</strong> {resumeData.phone}
+              </p>
+
+              <p className="score">Resume Score: {resumeData.score}</p>
+
+              <h3>Resume Suggestions</h3>
+              <ul>
+                {suggestions.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+
               <h3>Skills</h3>
               <div className="skills">
                 {resumeData.skills?.map((skill) => (
-                  <span className="skill" key={skill}>{skill}</span>
+                  <span className="skill" key={skill}>
+                    {skill}
+                  </span>
                 ))}
               </div>
             </div>
@@ -247,32 +259,41 @@ const downloadReport = () => {
               />
 
               <button onClick={handleMatch}>Analyze Match</button>
-<button onClick={downloadReport}>
-  Download Report
-</button>
+
+              <button onClick={downloadReport} style={{ marginLeft: "10px" }}>
+                Download Report
+              </button>
+
               {matchResult && (
                 <div className="match-box">
                   <h2>Match Percentage: {matchResult.matchPercentage}%</h2>
-<p className="score">{matchResult.verdict}</p>
+
+                  <p className="score">{matchResult.verdict}</p>
+
                   <h3 className="green">Matched Skills</h3>
                   <div className="skills">
                     {matchResult.matchedSkills?.map((skill) => (
-                      <span className="skill green-chip" key={skill}>{skill}</span>
+                      <span className="skill green-chip" key={skill}>
+                        {skill}
+                      </span>
                     ))}
                   </div>
 
                   <h3 className="red">Missing Skills</h3>
                   <div className="skills">
                     {matchResult.missingSkills?.map((skill) => (
-                      <span className="skill red-chip" key={skill}>{skill}</span>
+                      <span className="skill red-chip" key={skill}>
+                        {skill}
+                      </span>
                     ))}
                   </div>
+
                   <h3>Recommendations</h3>
-<ul>
-  {matchResult.recommendations?.map((item, index) => (
-    <li key={index}>{item}</li>
-  ))}
-</ul>
+                  <ul>
+                    {matchResult.recommendations?.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
@@ -281,16 +302,47 @@ const downloadReport = () => {
 
         <section className="card" id="resumes">
           <h2>Uploaded Resumes Dashboard</h2>
+
+          <h3>Recent Uploads</h3>
+
+          <table className="resume-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Score</th>
+                <th>Skills</th>
+                <th>Uploaded</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {allResumes.slice(0, 5).map((resume) => (
+                <tr key={resume._id}>
+                  <td>{resume.name}</td>
+                  <td>{resume.email}</td>
+                  <td>{resume.score || 0}</td>
+                  <td>{resume.skills?.length || 0}</td>
+                  <td>
+                    {resume.createdAt
+                      ? new Date(resume.createdAt).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           <input
-  className="search-input"
-  type="text"
-  placeholder="Search by name, email, or skill..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-/>
+            className="search-input"
+            type="text"
+            placeholder="Search by name, email, or skill..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
 
           {filteredResumes.length === 0 ? (
-            <p>No resumes uploaded yet.</p>
+            <p>No matching resumes found.</p>
           ) : (
             <div className="resume-list">
               {filteredResumes.map((resume) => (
@@ -302,12 +354,17 @@ const downloadReport = () => {
 
                     <div className="skills">
                       {resume.skills?.slice(0, 5).map((skill) => (
-                        <span className="skill" key={skill}>{skill}</span>
+                        <span className="skill" key={skill}>
+                          {skill}
+                        </span>
                       ))}
                     </div>
                   </div>
 
-                  <button className="delete-btn" onClick={() => deleteResume(resume._id)}>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteResume(resume._id)}
+                  >
                     Delete
                   </button>
                 </div>
