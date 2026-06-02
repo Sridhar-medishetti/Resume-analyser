@@ -88,11 +88,11 @@ function App() {
         <p>Parser & Job Matcher</p>
 
         <nav>
-          <a>Dashboard</a>
-          <a>Upload Resume</a>
-          <a>Job Match</a>
-          <a>Parsed Resumes</a>
-        </nav>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#upload">Upload Resume</a>
+  <a href="#job-match">Job Match</a>
+  <a href="#resumes">Parsed Resumes</a>
+</nav>
       </aside>
 
       <main className="main">
@@ -103,7 +103,7 @@ function App() {
           </div>
         </div>
 
-        <div className="stats">
+        <div className="stats" id="dashboard">
           <div className="stat-card">
             <span>Total Resumes</span>
             <h2>{totalResumes}</h2>
@@ -125,7 +125,7 @@ function App() {
           </div>
         </div>
 
-        <section className="card upload-card">
+        <section className="card upload-card" id="upload">
           <h2>Upload Resume</h2>
 
           <div className="upload-row">
@@ -171,7 +171,7 @@ function App() {
               </ul>
             </div>
 
-            <div className="card wide">
+            <div className="card wide" id="job-match">
               <h2>Job Description Match</h2>
 
               <textarea
@@ -212,7 +212,7 @@ function App() {
           </section>
         )}
 
-        <section className="card">
+        <section className="card" id="resumes">
           <h2>Uploaded Resumes Dashboard</h2>
           <input
   className="search-input"
