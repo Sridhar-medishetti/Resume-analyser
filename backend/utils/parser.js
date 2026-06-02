@@ -107,6 +107,45 @@ const extractEducation = (text) => {
   return education;
 };
 
+const extractExperience = (text) => {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const experience = [];
+  let isExperienceSection = false;
+
+  for (const line of lines) {
+    const lowerLine = line.toLowerCase();
+
+    if (
+      lowerLine === "internships" ||
+      lowerLine === "projects"
+    ) {
+      isExperienceSection = true;
+      continue;
+    }
+
+    if (
+      isExperienceSection &&
+      (
+        lowerLine === "professional training and certifications" ||
+        lowerLine === "languages" ||
+        lowerLine === "extracurricular activities"
+      )
+    ) {
+      break;
+    }
+
+    if (isExperienceSection) {
+      experience.push(line);
+    }
+  }
+
+  return experience;
+};
+
 const parseResume = async (filePath, mimetype) => {
   let text = "";
 
@@ -124,12 +163,13 @@ const parseResume = async (filePath, mimetype) => {
     throw new Error("Unsupported file type");
   }
 
-  return {
+ return {
   name: extractName(text),
   email: extractEmail(text),
   phone: extractPhone(text),
   skills: extractSkills(text),
   education: extractEducation(text),
+  experience: extractExperience(text),
   rawText: text,
 };
 
