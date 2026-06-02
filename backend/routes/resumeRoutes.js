@@ -40,4 +40,17 @@ res.json({
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const resumes = await Resume.find().sort({ createdAt: -1 });
+
+    res.json(resumes);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch resumes",
+      error: error.message,
+    });
+  }
+});
+
 module.exports = router;

@@ -45,10 +45,21 @@ const extractPhone = (text) => {
 const extractName = (text) => {
   const lines = text
     .split("\n")
-    .map((line) => line.trim())
+    .map(line => line.trim())
     .filter(Boolean);
 
-  return lines.length > 0 ? lines[0] : "";
+  for (const line of lines) {
+    if (
+      line.length > 3 &&
+      !line.toLowerCase().includes("page") &&
+      !line.includes("@") &&
+      /^[A-Z\s]+$/.test(line)
+    ) {
+      return line;
+    }
+  }
+
+  return "";
 };
 
 const extractSkills = (text) => {
