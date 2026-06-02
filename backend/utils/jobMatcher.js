@@ -11,15 +11,12 @@ const matchResumeWithJD = (resumeSkills, jdText) => {
 
   const matchPercentage =
     resumeSkills.length > 0
-      ? Math.round(
-          (matchedSkills.length / resumeSkills.length) * 100
-        )
+      ? Math.round((matchedSkills.length / resumeSkills.length) * 100)
       : 0;
 
-const recommendations = missingSkills.map(
-  (skill) => `Learn ${skill}`
-);
-
+  const recommendations = missingSkills.map(
+    (skill) => `Add or improve ${skill} knowledge to increase job match score.`
+  );
 
   return {
     matchedSkills,

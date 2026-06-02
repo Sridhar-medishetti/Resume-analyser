@@ -200,6 +200,12 @@ function App() {
                       <span className="skill red-chip" key={skill}>{skill}</span>
                     ))}
                   </div>
+                  <h3>Recommendations</h3>
+<ul>
+  {matchResult.recommendations?.map((item, index) => (
+    <li key={index}>{item}</li>
+  ))}
+</ul>
                 </div>
               )}
             </div>
