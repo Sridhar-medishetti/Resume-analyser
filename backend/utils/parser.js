@@ -149,6 +149,29 @@ const extractExperience = (text) => {
   return experience;
 };
 
+const calculateResumeScore = ({
+  name,
+  email,
+  phone,
+  skills,
+  education,
+  experience,
+}) => {
+  let score = 0;
+
+  if (name) score += 10;
+  if (email) score += 10;
+  if (phone) score += 10;
+
+  score += Math.min(skills.length * 3, 30);
+
+  if (education.length > 0) score += 20;
+
+  if (experience.length > 0) score += 20;
+
+  return Math.min(score, 100);
+};
+
 const parseResume = async (filePath, mimetype) => {
   let text = "";
 
@@ -166,7 +189,7 @@ const parseResume = async (filePath, mimetype) => {
     throw new Error("Unsupported file type");
   }
 
- return {
+const parsedData = {
   name: extractName(text),
   email: extractEmail(text),
   phone: extractPhone(text),
@@ -175,6 +198,10 @@ const parseResume = async (filePath, mimetype) => {
   experience: extractExperience(text),
   rawText: text,
 };
+
+parsedData.score = calculateResumeScore(parsedData);
+
+return parsedData;
 
 };
 
