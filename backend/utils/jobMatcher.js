@@ -16,9 +16,15 @@ const matchResumeWithJD = (resumeSkills, jdText) => {
         )
       : 0;
 
+const recommendations = missingSkills.map(
+  (skill) => `Learn ${skill}`
+);
+
+
   return {
     matchedSkills,
     missingSkills,
+    recommendations,
     matchPercentage,
   };
 };
