@@ -2,6 +2,28 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 
+const skillsList = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "React",
+  "Node.js",
+  "Express.js",
+  "MongoDB",
+  "SQL",
+  "MySQL",
+  "Python",
+  "Java",
+  "Git",
+  "GitHub",
+  "REST API",
+  "JWT",
+  "Bootstrap",
+  "Tailwind",
+  "Machine Learning",
+  "NLP"
+];
+
 const extractEmail = (text) => {
   const emailRegex =
     /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/;
@@ -29,6 +51,14 @@ const extractName = (text) => {
   return lines.length > 0 ? lines[0] : "";
 };
 
+const extractSkills = (text) => {
+  const lowerText = text.toLowerCase();
+
+  return skillsList.filter((skill) =>
+    lowerText.includes(skill.toLowerCase())
+  );
+};
+
 const parseResume = async (filePath, mimetype) => {
   let text = "";
 
@@ -50,6 +80,7 @@ const parseResume = async (filePath, mimetype) => {
   name: extractName(text),
   email: extractEmail(text),
   phone: extractPhone(text),
+  skills: extractSkills(text),
   rawText: text,
 };
 
