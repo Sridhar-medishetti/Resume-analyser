@@ -1,4 +1,5 @@
 const express = require("express");
+const Resume = require("../models/Resume");
 const multer = require("multer");
 const parseResume = require("../utils/parser");
 
@@ -22,9 +23,14 @@ router.post("/upload", upload.single("resume"), async (req, res) => {
   req.file.mimetype
 );
 
-    res.json({
-  message: "Resume parsed successfully",
-  data: parsedData,
+    const savedResume = await Resume.create({
+  ...parsedData,
+  fileName: req.file.filename,
+});
+
+res.json({
+  message: "Resume parsed and saved successfully",
+  data: savedResume,
 });
   } catch (error) {
     res.status(500).json({
