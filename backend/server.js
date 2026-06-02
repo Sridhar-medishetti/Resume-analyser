@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db");
 const resumeRoutes = require("./routes/resumeRoutes");
 
 dotenv.config();
+console.log(process.env.MONGO_URI);
+connectDB();
 
 const app = express();
 
