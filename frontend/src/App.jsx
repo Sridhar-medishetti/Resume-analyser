@@ -9,6 +9,7 @@ function App() {
   const [matchResult, setMatchResult] = useState(null);
   const [allResumes, setAllResumes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   const fetchResumes = async () => {
     try {
@@ -33,6 +34,7 @@ function App() {
       const res = await API.post("/api/resumes/upload", formData);
 
       setResumeData(res.data.data);
+      setSuggestions(res.data.suggestions || []);
       setMatchResult(null);
       fetchResumes();
     } catch (error) {
