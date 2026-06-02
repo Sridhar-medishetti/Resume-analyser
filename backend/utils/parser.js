@@ -114,7 +114,7 @@ const extractExperience = (text) => {
     .filter(Boolean);
 
   const experience = [];
-  let isExperienceSection = false;
+  let capture = false;
 
   for (const line of lines) {
     const lowerLine = line.toLowerCase();
@@ -123,22 +123,25 @@ const extractExperience = (text) => {
       lowerLine === "internships" ||
       lowerLine === "projects"
     ) {
-      isExperienceSection = true;
+      capture = true;
       continue;
     }
 
     if (
-      isExperienceSection &&
-      (
-        lowerLine === "professional training and certifications" ||
-        lowerLine === "languages" ||
-        lowerLine === "extracurricular activities"
-      )
+      lowerLine === "technical skills" ||
+      lowerLine === "professional training and certifications" ||
+      lowerLine === "languages" ||
+      lowerLine === "extracurricular activities"
     ) {
-      break;
+      capture = false;
     }
 
-    if (isExperienceSection) {
+    if (
+      capture &&
+      !line.startsWith("Page") &&
+      !line.includes("linkedin.com") &&
+      !line.includes("github.com")
+    ) {
       experience.push(line);
     }
   }
