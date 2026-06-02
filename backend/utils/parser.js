@@ -71,25 +71,40 @@ const extractSkills = (text) => {
 };
 
 const extractEducation = (text) => {
-  const educationKeywords = [
-    "B.Tech",
-    "Bachelor",
-    "Engineering",
-    "Degree",
-    "University",
-    "College",
-    "Intermediate",
-    "SSC",
-  ];
-
-  return text
+  const lines = text
     .split("\n")
-    .filter((line) =>
-      educationKeywords.some((keyword) =>
-        line.toLowerCase().includes(keyword.toLowerCase())
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const education = [];
+  let isEducationSection = false;
+
+  for (const line of lines) {
+    const lowerLine = line.toLowerCase();
+
+    if (lowerLine === "education") {
+      isEducationSection = true;
+      continue;
+    }
+
+    if (
+      isEducationSection &&
+      (
+        lowerLine === "internships" ||
+        lowerLine === "technical skills" ||
+        lowerLine === "projects" ||
+        lowerLine === "professional training and certifications"
       )
-    )
-    .map((line) => line.trim());
+    ) {
+      break;
+    }
+
+    if (isEducationSection) {
+      education.push(line);
+    }
+  }
+
+  return education;
 };
 
 const parseResume = async (filePath, mimetype) => {
