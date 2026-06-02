@@ -1,34 +1,148 @@
 # AI Resume Parser & Job Match Analyzer
 
-A full-stack MERN application that parses PDF/DOCX resumes, extracts candidate details, calculates resume score, and matches resumes with job descriptions.
+## Live Demo
 
-## Features
+Frontend:
+https://resume-analyser-two-beta.vercel.app
 
-- Upload PDF/DOCX resumes
-- Extract name, email, phone, skills, education, and experience
-- Store parsed resume data in MongoDB
-- View uploaded resumes in dashboard
-- Delete resumes
-- Calculate resume score
-- Match resume with job description
-- Show matched skills, missing skills, recommendations, and match verdict
-- Search resumes by name, email, or skill
+Backend:
+https://resume-analyser-zm57.onrender.com
 
-## Tech Stack
+## Overview
+
+AI Resume Parser & Job Match Analyzer is a full-stack MERN application that automates resume screening and candidate evaluation.
+
+The application allows users to upload PDF or DOCX resumes, automatically extracts candidate information, stores parsed data in MongoDB, analyzes resume quality, and compares candidate skills against job descriptions to generate match scores and recommendations.
+
+The platform provides recruiters and job seekers with a streamlined way to evaluate resumes and identify skill gaps.
+
+---
+
+## Key Features
+
+### Resume Parsing
+
+* Upload PDF and DOCX resumes
+* Extract candidate information automatically
+* Extract:
+
+  * Name
+  * Email
+  * Phone Number
+  * Skills
+  * Education
+  * Experience
+
+### Resume Analytics
+
+* Resume score calculation
+* Resume improvement suggestions
+* Skills visualization
+* Resume dashboard
+
+### Job Description Matching
+
+* Compare resume skills with job requirements
+* Match percentage calculation
+* Missing skill detection
+* Matched skill identification
+* Personalized recommendations
+* Match verdict generation
+
+### Resume Management
+
+* View uploaded resumes
+* Search resumes by:
+
+  * Name
+  * Email
+  * Skill
+* Delete resumes
+* Recent uploads table
+
+### Report Generation
+
+* Download resume analysis as PDF
+* Export:
+
+  * Resume score
+  * Match percentage
+  * Missing skills
+  * Recommendations
+  * Verdict
+
+---
+
+## Dashboard Screenshots
+
+### Main Dashboard
+
+![Main](image.png)
+
+### Job Matching
+
+![check jd and skills match](image-1.png)
+
+### PDF Report
+
+![report](image-2.png)
+
+---
+
+## Technology Stack
 
 ### Frontend
-- React
-- Axios
-- CSS
+
+* React.js
+* Axios
+* CSS3
+* jsPDF
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- Multer
-- pdf-parse
-- mammoth
+
+* Node.js
+* Express.js
+
+### Database
+
+* MongoDB Atlas
+* Mongoose
+
+### File Processing
+
+* Multer
+* PDF Parser
+* Mammoth (DOCX Parsing)
+
+### Deployment
+
+* Vercel
+* Render
+* MongoDB Atlas
+
+---
+
+## Project Architecture
+
+Frontend (React)
+
+↓
+
+REST APIs
+
+↓
+
+Express.js Backend
+
+↓
+
+Resume Parsing Engine
+
+↓
+
+MongoDB Atlas
+
+---
 
 ## API Endpoints
 
@@ -36,28 +150,101 @@ A full-stack MERN application that parses PDF/DOCX resumes, extracts candidate d
 
 POST /api/resumes/upload
 
+Uploads and parses a resume.
+
 ### Get All Resumes
 
 GET /api/resumes
+
+Returns all stored resumes.
+
+### Match Resume
+
+POST /api/resumes/match/:id
+
+Matches resume against a job description.
 
 ### Delete Resume
 
 DELETE /api/resumes/:id
 
-### Match Resume with Job Description
+Deletes a stored resume.
 
-POST /api/resumes/match/:id
+---
 
-## Project Highlights
+## Installation
 
-- Built REST APIs for resume upload, parsing, storage, retrieval, deletion, and job matching
-- Implemented skill extraction and job description matching algorithm
-- Designed a responsive React dashboard with resume analytics
-- Used MongoDB Atlas for cloud database storage
+### Clone Repository
 
-## Future Improvements
+git clone https://github.com/Sridhar-medishetti/Resume-analyser.git
 
-- JWT authentication
-- Deployment on Vercel and Render
-- Better NLP-based parsing
-- Resume improvement suggestions
+### Install Backend Dependencies
+
+cd backend
+
+npm install
+
+### Install Frontend Dependencies
+
+cd frontend
+
+npm install
+
+### Configure Environment Variables
+
+Create a .env file inside backend:
+
+MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
+
+### Run Backend
+
+npm run dev
+
+### Run Frontend
+
+npm run dev
+
+---
+
+## Deployment
+
+### Frontend
+
+Hosted on Vercel
+
+### Backend
+
+Hosted on Render
+
+### Database
+
+Hosted on MongoDB Atlas
+
+---
+
+## Future Enhancements
+
+* JWT Authentication
+* Role-Based Access Control
+* Advanced NLP Resume Analysis
+* AI Interview Question Generator
+* Resume Ranking System
+* Candidate Comparison Dashboard
+
+---
+
+## Author
+
+Sridhar Medishetti
+
+GitHub:
+https://github.com/Sridhar-medishetti
+
+LinkedIn:
+https://www.linkedin.com/in/sridhar-medishetti/
+
+---
+
+## License
+
+This project is developed for educational and portfolio purposes.
