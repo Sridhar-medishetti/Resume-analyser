@@ -17,12 +17,15 @@ const upload = multer({ storage });
 
 router.post("/upload", upload.single("resume"), async (req, res) => {
   try {
-    const text = await parseResume(req.file.path, req.file.mimetype);
+    const parsedData = await parseResume(
+  req.file.path,
+  req.file.mimetype
+);
 
     res.json({
-      message: "Resume parsed successfully",
-      text: text.substring(0, 1000),
-    });
+  message: "Resume parsed successfully",
+  data: parsedData,
+});
   } catch (error) {
     res.status(500).json({
       message: "Resume parsing failed",
