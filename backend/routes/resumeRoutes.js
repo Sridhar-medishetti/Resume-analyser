@@ -3,6 +3,7 @@ const Resume = require("../models/Resume");
 const multer = require("multer");
 const parseResume = require("../utils/parser");
 const matchResumeWithJD = require("../utils/jobMatcher");
+const generateSuggestions = require("../utils/resumeSuggestions");
 
 const router = express.Router();
 
@@ -19,20 +20,20 @@ const upload = multer({ storage });
 
 router.post("/upload", upload.single("resume"), async (req, res) => {
   try {
-    const parsedData = await parseResume(
-  req.file.path,
-  req.file.mimetype
-);
+    const parsedData = await parseResume(req.file.path, req.file.mimetype);
 
     const savedResume = await Resume.create({
-  ...parsedData,
-  fileName: req.file.filename,
-});
+      ...parsedData,
+      fileName: req.file.filename,
+    });
 
-res.json({
-  message: "Resume parsed and saved successfully",
-  data: savedResume,
-});
+    const suggestions = generateSuggestions(savedResume);
+
+    res.json({
+      message: "Resume parsed and saved successfully",
+      data: savedResume,
+      suggestions,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Resume parsing failed",
@@ -44,7 +45,6 @@ res.json({
 router.get("/", async (req, res) => {
   try {
     const resumes = await Resume.find().sort({ createdAt: -1 });
-
     res.json(resumes);
   } catch (error) {
     res.status(500).json({
@@ -66,30 +66,12 @@ router.post("/match/:id", async (req, res) => {
       });
     }
 
-    const result = matchResumeWithJD(
-      resume.skills,
-      jobDescription
-    );
+    const result = matchResumeWithJD(resume.skills, jobDescription);
 
     res.json(result);
   } catch (error) {
     res.status(500).json({
       message: "Matching failed",
-      error: error.message,
-    });
-  }
-});
-
-router.delete("/:id", async (req, res) => {
-  try {
-    await Resume.findByIdAndDelete(req.params.id);
-
-    res.json({
-      message: "Resume deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Delete failed",
       error: error.message,
     });
   }
