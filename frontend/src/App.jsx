@@ -8,6 +8,7 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [matchResult, setMatchResult] = useState(null);
   const [allResumes, setAllResumes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchResumes = async () => {
     try {
@@ -67,6 +68,18 @@ function App() {
   const totalSkills = resumeData?.skills?.length || 0;
   const latestScore = resumeData?.score || 0;
   const totalResumes = allResumes.length;
+  const filteredResumes = allResumes.filter((resume) => {
+  const search = searchTerm.toLowerCase();
+
+  return (
+    resume.name?.toLowerCase().includes(search) ||
+    resume.email?.toLowerCase().includes(search) ||
+    resume.skills?.some((skill) =>
+      skill.toLowerCase().includes(search)
+    )
+  );
+});
+
 
   return (
     <div className="layout">
@@ -195,12 +208,19 @@ function App() {
 
         <section className="card">
           <h2>Uploaded Resumes Dashboard</h2>
+          <input
+  className="search-input"
+  type="text"
+  placeholder="Search by name, email, or skill..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
 
-          {allResumes.length === 0 ? (
+          {filteredResumes.length === 0 ? (
             <p>No resumes uploaded yet.</p>
           ) : (
             <div className="resume-list">
-              {allResumes.map((resume) => (
+              {filteredResumes.map((resume) => (
                 <div className="resume-item" key={resume._id}>
                   <div>
                     <h3>{resume.name}</h3>
