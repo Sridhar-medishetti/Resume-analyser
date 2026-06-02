@@ -2,6 +2,7 @@ const express = require("express");
 const Resume = require("../models/Resume");
 const multer = require("multer");
 const parseResume = require("../utils/parser");
+const matchResumeWithJD = require("../utils/jobMatcher");
 
 const router = express.Router();
 
@@ -48,6 +49,32 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to fetch resumes",
+      error: error.message,
+    });
+  }
+});
+
+router.post("/match/:id", async (req, res) => {
+  try {
+    const { jobDescription } = req.body;
+
+    const resume = await Resume.findById(req.params.id);
+
+    if (!resume) {
+      return res.status(404).json({
+        message: "Resume not found",
+      });
+    }
+
+    const result = matchResumeWithJD(
+      resume.skills,
+      jobDescription
+    );
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      message: "Matching failed",
       error: error.message,
     });
   }
