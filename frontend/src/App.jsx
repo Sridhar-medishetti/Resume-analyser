@@ -24,10 +24,7 @@ function App() {
 
   const handleUpload = async () => {
     try {
-      if (!file) {
-        alert("Please select a resume");
-        return;
-      }
+      if (!file) return alert("Please select a resume");
 
       const formData = new FormData();
       formData.append("resume", file);
@@ -45,10 +42,7 @@ function App() {
 
   const handleMatch = async () => {
     try {
-      if (!resumeData?._id) {
-        alert("Upload resume first");
-        return;
-      }
+      if (!resumeData?._id) return alert("Upload resume first");
 
       const res = await API.post(`/resumes/match/${resumeData._id}`, {
         jobDescription,
@@ -62,136 +56,173 @@ function App() {
   };
 
   const deleteResume = async (id) => {
-  try {
-    await API.delete(`/resumes/${id}`);
-    fetchResumes();
-  } catch (error) {
-    console.log(error);
-  }
-};
+    try {
+      await API.delete(`/resumes/${id}`);
+      fetchResumes();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const totalSkills = resumeData?.skills?.length || 0;
+  const latestScore = resumeData?.score || 0;
+  const totalResumes = allResumes.length;
 
   return (
-    <div className="container">
-      <h1 className="title">AI Resume Parser & Job Match Analyzer</h1>
+    <div className="layout">
+      <aside className="sidebar">
+        <h2>Resume AI</h2>
+        <p>Parser & Job Matcher</p>
 
-      <div className="card">
-        <input
-          type="file"
-          accept=".pdf,.docx"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
+        <nav>
+          <a>Dashboard</a>
+          <a>Upload Resume</a>
+          <a>Job Match</a>
+          <a>Parsed Resumes</a>
+        </nav>
+      </aside>
 
-        <button className="upload-btn" onClick={handleUpload}>
-          Upload Resume
-        </button>
-      </div>
+      <main className="main">
+        <div className="hero">
+          <div>
+            <h1>AI Resume Parser</h1>
+            <p>Upload resumes, extract candidate details, and match them with job descriptions.</p>
+          </div>
+        </div>
 
-      {resumeData && (
-        <div className="card">
-          <h2>{resumeData.name}</h2>
-
-          <p>
-            <strong>Email:</strong> {resumeData.email}
-          </p>
-
-          <p>
-            <strong>Phone:</strong> {resumeData.phone}
-          </p>
-
-          <p className="score">Resume Score: {resumeData.score}</p>
-
-          <h3>Skills</h3>
-          <div className="skills">
-            {resumeData.skills?.map((skill) => (
-              <span className="skill" key={skill}>
-                {skill}
-              </span>
-            ))}
+        <div className="stats">
+          <div className="stat-card">
+            <span>Total Resumes</span>
+            <h2>{totalResumes}</h2>
           </div>
 
-          <h3>Education</h3>
-          <ul>
-            {resumeData.education?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+          <div className="stat-card">
+            <span>Resume Score</span>
+            <h2>{latestScore}</h2>
+          </div>
 
-          <h3>Experience</h3>
-          <ul>
-            {resumeData.experience?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+          <div className="stat-card">
+            <span>Total Skills</span>
+            <h2>{totalSkills}</h2>
+          </div>
 
-          <h3>Job Description</h3>
-          <textarea
-            rows="8"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Paste Job Description here..."
-          />
+          <div className="stat-card">
+            <span>Match Score</span>
+            <h2>{matchResult ? `${matchResult.matchPercentage}%` : "--"}</h2>
+          </div>
+        </div>
 
-          <br />
-          <br />
+        <section className="card upload-card">
+          <h2>Upload Resume</h2>
 
-          <button className="upload-btn" onClick={handleMatch}>
-            Match Resume
-          </button>
+          <div className="upload-row">
+            <input
+              type="file"
+              accept=".pdf,.docx"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
 
-          {matchResult && (
+            <button onClick={handleUpload}>Upload Resume</button>
+          </div>
+        </section>
+
+        {resumeData && (
+          <section className="grid">
             <div className="card">
-              <h2>Match Percentage: {matchResult.matchPercentage}%</h2>
+              <h2>{resumeData.name}</h2>
+              <p><strong>Email:</strong> {resumeData.email}</p>
+              <p><strong>Phone:</strong> {resumeData.phone}</p>
+              <p className="score">Resume Score: {resumeData.score}</p>
 
-              <h3 className="match">Matched Skills</h3>
+              <h3>Skills</h3>
               <div className="skills">
-                {matchResult.matchedSkills?.map((skill) => (
-                  <span className="skill" key={skill}>
-                    {skill}
-                  </span>
+                {resumeData.skills?.map((skill) => (
+                  <span className="skill" key={skill}>{skill}</span>
                 ))}
               </div>
+            </div>
 
-              <h3 className="missing">Missing Skills</h3>
+            <div className="card">
+              <h2>Education</h2>
               <ul>
-                {matchResult.missingSkills?.map((skill) => (
-                  <li key={skill}>{skill}</li>
+                {resumeData.education?.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+
+              <h2>Experience</h2>
+              <ul>
+                {resumeData.experience?.slice(0, 8).map((item, index) => (
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
-          )}
-        </div>
-      )}
 
-      <div className="card">
-        <h2>Uploaded Resumes Dashboard</h2>
+            <div className="card wide">
+              <h2>Job Description Match</h2>
 
-        {allResumes.length === 0 ? (
-          <p>No resumes uploaded yet.</p>
-        ) : (
-          allResumes.map((resume) => (
-            <div key={resume._id}>
-              <h3>{resume.name}</h3>
-              <p>{resume.email}</p>
-              <p>Score: {resume.score}</p>
+              <textarea
+                rows="7"
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Paste job description here..."
+              />
 
-              <div className="skills">
-                {resume.skills?.slice(0, 5).map((skill) => (
-                  <span className="skill" key={skill}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-<button
-      className="upload-btn"
-      onClick={() => deleteResume(resume._id)}
-    >
-      Delete Resume
-    </button>
-              <hr />
+              <button onClick={handleMatch}>Analyze Match</button>
+
+              {matchResult && (
+                <div className="match-box">
+                  <h2>Match Percentage: {matchResult.matchPercentage}%</h2>
+
+                  <h3 className="green">Matched Skills</h3>
+                  <div className="skills">
+                    {matchResult.matchedSkills?.map((skill) => (
+                      <span className="skill green-chip" key={skill}>{skill}</span>
+                    ))}
+                  </div>
+
+                  <h3 className="red">Missing Skills</h3>
+                  <div className="skills">
+                    {matchResult.missingSkills?.map((skill) => (
+                      <span className="skill red-chip" key={skill}>{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          ))
+          </section>
         )}
-      </div>
+
+        <section className="card">
+          <h2>Uploaded Resumes Dashboard</h2>
+
+          {allResumes.length === 0 ? (
+            <p>No resumes uploaded yet.</p>
+          ) : (
+            <div className="resume-list">
+              {allResumes.map((resume) => (
+                <div className="resume-item" key={resume._id}>
+                  <div>
+                    <h3>{resume.name}</h3>
+                    <p>{resume.email}</p>
+                    <p>Score: {resume.score}</p>
+
+                    <div className="skills">
+                      {resume.skills?.slice(0, 5).map((skill) => (
+                        <span className="skill" key={skill}>{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="delete-btn" onClick={() => deleteResume(resume._id)}>
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
     </div>
   );
 }
