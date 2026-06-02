@@ -12,7 +12,7 @@ function App() {
 
   const fetchResumes = async () => {
     try {
-      const res = await API.get("/resumes");
+      const res = await API.get("/api/resumes");
       setAllResumes(res.data);
     } catch (error) {
       console.log(error);
@@ -30,7 +30,7 @@ function App() {
       const formData = new FormData();
       formData.append("resume", file);
 
-      const res = await API.post("/resumes/upload", formData);
+      const res = await API.post("/api/resumes/upload", formData);
 
       setResumeData(res.data.data);
       setMatchResult(null);
@@ -45,7 +45,7 @@ function App() {
     try {
       if (!resumeData?._id) return alert("Upload resume first");
 
-      const res = await API.post(`/resumes/match/${resumeData._id}`, {
+      const res = await API.post(`/api/resumes/match/${resumeData._id}`, {
         jobDescription,
       });
 
@@ -58,7 +58,7 @@ function App() {
 
   const deleteResume = async (id) => {
     try {
-      await API.delete(`/resumes/${id}`);
+      await API.delete(`/api/resumes/${id}`);
       fetchResumes();
     } catch (error) {
       console.log(error);
