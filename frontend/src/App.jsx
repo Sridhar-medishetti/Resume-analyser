@@ -61,6 +61,15 @@ function App() {
     }
   };
 
+  const deleteResume = async (id) => {
+  try {
+    await API.delete(`/resumes/${id}`);
+    fetchResumes();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   return (
     <div className="container">
       <h1 className="title">AI Resume Parser & Job Match Analyzer</h1>
@@ -172,7 +181,12 @@ function App() {
                   </span>
                 ))}
               </div>
-
+<button
+      className="upload-btn"
+      onClick={() => deleteResume(resume._id)}
+    >
+      Delete Resume
+    </button>
               <hr />
             </div>
           ))

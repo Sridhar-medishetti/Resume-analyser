@@ -80,4 +80,34 @@ router.post("/match/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    await Resume.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Resume deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Delete failed",
+      error: error.message,
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    await Resume.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Resume deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Delete failed",
+      error: error.message,
+    });
+  }
+});
+
 module.exports = router;
